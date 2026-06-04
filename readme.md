@@ -1,22 +1,23 @@
 #  Sound and Music
 
 
-재밋어보이는 기능 리스트업
+## 재밋어보이는 기능 리스트업
 
-https://developer.apple.com/documentation/applemusicapi/artwork
-- 아트워크 
+<https://developer.apple.com/documentation/applemusicapi/artwork>
+- **아트워크** 
     - bgColor 이미지의 평균 배경색.
     - textColor1 배경색이 표시될 경우 사용되는 기본 텍스트 색상입니다.
 
 
-https://developer.apple.com/documentation/applemusicapi/musicsummaries/views-data.dictionary
-- musicsummaries
+<https://developer.apple.com/documentation/applemusicapi/musicsummaries/views-data.dictionary>
+- **musicsummaries**
     - 사용자가 지정된 기간 동안 가장 많이 들었던 앨범, 아티스트 및 노래 목록입니다.
 
 
 ---
-https://developer.apple.com/documentation/MusicKit/
-MusicKit 시작하기 ! 
+
+## MusicKit 시작하기 !
+<https://developer.apple.com/documentation/MusicKit/> 
 
 1. 애플 개발자 계정에서 미디어 Identifiers와 개인 키를 생성
 - Certificates, Identifiers & Profiles > Identifiers > Media IDs > 새로 생성
@@ -36,5 +37,5 @@ MusicKit 시작하기 !
 - value 에 안내문구 기입 (e.g., Apple Music 카탈로그 검색 및 음악 재생 기능을 제공하기 위해 음악 보관함 권한이 필요합니다.)
 
 
-4. macOS 앱 - 샌드박스(App Sandbox) 네트워크 설정
+4. macOS 앱 - 샌드박스(App Sandbox) 네트워크 설정 허용
 - Targets > macOS > Signing & Capabilities > App Sandbox > Network: Outgoing Connections (Client)
