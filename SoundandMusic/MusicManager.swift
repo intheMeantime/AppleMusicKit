@@ -14,6 +14,7 @@ class MusicManager: ObservableObject {
     @Published var isAuthorized = false
     @Published var searchResults: [Song] = []
     
+    
     /// 1. 권한 요청 메서드
     func requestAuthorization() async {
         let status = await MusicAuthorization.request()
@@ -58,6 +59,57 @@ class MusicManager: ObservableObject {
         } catch {
             // 네트워크 오류나 인증 오류 등이 발생했을 때의 처리
             print("구독 정보를 가져오는데 실패했습니다: \(error.localizedDescription)")
+        }
+    }
+    
+    
+    
+    func fetchRecommendations() async throws {
+        let request = MusicPersonalRecommendationsRequest()
+        let response = try await request.response()
+        
+        for recommendation in response.recommendations {
+            print("추천 카테고리: \(recommendation.title)")
+            // 각 추천 항목 내부에는 앨범이나 플레이리스트 묶음이 존재함
+        }
+    }
+    
+    
+    func fetchMyPlaylists() async throws {
+        var request = MusicLibraryRequest<Playlist>()
+        request.limit = 20
+        
+        let response = try await request.response()
+        for playlist in response.items {
+            print("보관함 플레이리스트: \(playlist.name)")
+        }
+    }
+    
+    
+    func playSong(song: Song) {
+        let player = ApplicationMusicPlayer.shared
+        player.queue = [song]
+        
+        Task {
+            do {
+                try await player.play()
+                print("재생 시작: \(song.title)")
+            } catch {
+                print("재생 실패: \(error)")
+            }
+        }
+    }
+    
+
+    
+    
+    func fetchHeavyRotation() async throws {
+        let request = MusicRecentlyPlayedRequest<Song>()
+        // 또는 MusicHeavyRotationRequest 사용 가능
+        let response = try await request.response()
+        
+        for song in response.items {
+            print("자주 듣는 곡: \(song.title)")
         }
     }
     

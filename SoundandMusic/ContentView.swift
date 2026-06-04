@@ -10,7 +10,7 @@ import MusicKit
 
 struct ContentView: View {
     @StateObject private var musicManager = MusicManager()
-    @State private var searchKeyword = "릴보이"
+    @State private var searchKeyword = "friends"
     
     var body: some View {
         VStack(spacing: 20) {
@@ -20,14 +20,19 @@ struct ContentView: View {
                     .fill(musicManager.isAuthorized ? Color.green : Color.red)
                     .frame(width: 12, height: 12)
                 Text(musicManager.isAuthorized ? "Apple Music 연결됨" : "연결 필요")
+//                checkSubscription()
                 
                 if !musicManager.isAuthorized {
                     Button("권한 요청") {
                         Task { await musicManager.requestAuthorization() }
                     }
                 }
+                
+                musicManager.fetchRecommendations
             }
             .padding()
+            
+            
             
             // 검색 영역
             HStack {
@@ -39,6 +44,8 @@ struct ContentView: View {
                 .disabled(!musicManager.isAuthorized || searchKeyword.isEmpty)
             }
             .padding(.horizontal)
+            
+            
             
             // 결과 리스트
             List(musicManager.searchResults) { song in
@@ -56,6 +63,15 @@ struct ContentView: View {
                     }
                 }
             }
+            
+            
+            
+            
+            
+            
+            
+            
+            
         }
         .frame(minWidth: 400, minHeight: 500)
         .onAppear {

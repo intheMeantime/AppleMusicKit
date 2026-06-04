@@ -15,6 +15,8 @@
 		F8641B232FCF205700E98376 /* SoundandMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SoundandMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8641B312FCF250300E98376 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		F8B88C822FD156F800BD0BAF /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = .gitignore; sourceTree = "<group>"; };
+		F8B88C852FD15DCA00BD0BAF /* basic.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = basic.md; sourceTree = "<group>"; };
+		F8B88C862FD1661900BD0BAF /* musickit.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = musickit.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +41,7 @@
 		F8641B1A2FCF205700E98376 = {
 			isa = PBXGroup;
 			children = (
+				F8B88C842FD15DA900BD0BAF /* note */,
 				F8B88C822FD156F800BD0BAF /* .gitignore */,
 				F8641B312FCF250300E98376 /* readme.md */,
 				F8641B252FCF205700E98376 /* SoundandMusic */,
@@ -52,6 +55,15 @@
 				F8641B232FCF205700E98376 /* SoundandMusic.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F8B88C842FD15DA900BD0BAF /* note */ = {
+			isa = PBXGroup;
+			children = (
+				F8B88C862FD1661900BD0BAF /* musickit.md */,
+				F8B88C852FD15DCA00BD0BAF /* basic.md */,
+			);
+			path = note;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
