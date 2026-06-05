@@ -61,7 +61,8 @@ __재밋어보이는 기능 리스트업__
 ## Preview
 
 ### 음악 재생 뷰
-- Song의 모든 property를 출력해두었음.
+- 애플뮤직에 있는 노래 검색 & 재생
+- `Song` 스트럭트의 모든 property를 출력해두었음.
 
 ![playView](img/playView.png)
 
@@ -98,7 +99,7 @@ func playSong(_ song: Song) {
 
 ### 아트워크 뷰
 ![artworkView](img/artworkView.png)
-- 아트워크 스트럭트의 property 출력
+- `Artwork` 스트럭트의 모든 property 출력
 - 대체텍스트, 이미지 사이즈, 평균 색상, 보조색상 등
 
 
