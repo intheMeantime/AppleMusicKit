@@ -14,3 +14,15 @@
 - Pr (Protocol / 프로토콜): * 특정 자격 요건이나 메서드 청사진을 정의하는 프로토콜(Protocol)을 의미합니다.
 
 - Ex (Extension / 익스텐션): * 기존 타입(클래스, 구조체 등)에 기능을 확장하는 익스텐션(Extension) 블록을 의미합니다.
+
+
+
+### 키보드 받아오기 관련
+
+- 전역 키보드(`addGlobalMonitorForEvents`) 받아오면서 
+    - Privacy - Accessibility Usage Description
+    - Privacy - AppleEvents Sending Usage Description
+    - 권한 지정 필요 (info.plist)
+
+- 사용자가
+    - 시스템 환경설정 → 개인 정보 보호 및 보안 → 손쉬운 사용에서 앱을 체크

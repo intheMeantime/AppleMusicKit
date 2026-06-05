@@ -9,47 +9,80 @@ import Foundation
 import MusicKit
 import Combine
 
+// MARK: - 키 로그 엔트리
+
+struct KeyLogEntry: Identifiable {
+    let id = UUID()
+    let key: String          // 눌린 키 문자
+    let action: KeyAction    // 재생 or 일시정지
+
+    enum KeyAction {
+        case play
+        case pause
+
+        var label: String  { self == .play ? "▶" : "⏸" }
+        var isPlay: Bool   { self == .play }
+    }
+}
+
+// MARK: - MusicManager
+
 @MainActor
 class MusicManager: ObservableObject {
-    
-    // MARK: - Published Properties
-    
+
+    // MARK: Published
+
     @Published var isAuthorized = false
-    
-    /// 탭 1: 검색 결과 (재생 가능)
+
+    /// 탭 1: 검색 결과
     @Published var searchResults: [Song] = []
-    
+
     /// 탭 2: 아트워크 전용 검색 결과
     @Published var artworkSearchResults: [Song] = []
-    
+
     /// 탭 3: 개인 추천
     @Published var recommendations: [MusicPersonalRecommendation] = []
-    
+
     /// 탭 4: Replay 플레이리스트
     @Published var replayPlaylists: [Playlist] = []
-    
+
     /// 현재 재생 중인 곡
     @Published var nowPlayingSong: Song? = nil
     @Published var isPlaying: Bool = false
+
+    // MARK: 키보드 모드 관련
+
+    /// 클릭으로 선택된 곡 (키보드 조작 대상)
+    @Published var selectedSong: Song? = nil
+
+    /// 키보드 모드 ON/OFF
+    @Published var isKeyboardModeEnabled: Bool = false
+
+    /// 누른 키 횟수 (홀수 = 재생, 짝수 = 일시정지)
+    @Published var keyPressCount: Int = 0
     
+    /// 재생 중지 인터벌 ( default ==5 )
+    @Published var pauseInterval: Int = 5
+
+    /// 키 입력 로그 (최대 30개, 최신 순)
+    @Published var keyLog: [KeyLogEntry] = []
+
     // MARK: - Authorization
-    
+
     func requestAuthorization() async {
         let status = await MusicAuthorization.request()
         switch status {
         case .authorized:
             self.isAuthorized = true
-            print("MusicKit 권한 승인됨")
         case .denied, .restricted, .notDetermined:
             self.isAuthorized = false
-            print("MusicKit 권한 거부 또는 제한됨: \(status)")
         @unknown default:
             self.isAuthorized = false
         }
     }
-    
-    // MARK: - 탭 1: 검색 + 재생
-    
+
+    // MARK: - 탭 1: 검색
+
     func searchSong(keyword: String) async {
         guard isAuthorized else { return }
         do {
@@ -61,32 +94,116 @@ class MusicManager: ObservableObject {
             print("검색 실패: \(error.localizedDescription)")
         }
     }
-    
+
+    // MARK: - 탭 1: 곡 선택 (클릭)
+
+    /// 키보드 모드 여부에 따라 동작이 달라짐:
+    /// - 일반 모드: 즉시 재생
+    /// - 키보드 모드: 선택만 하고 keyPressCount 초기화
+    func handleSongTap(_ song: Song) {
+        if isKeyboardModeEnabled {
+            selectSong(song)
+        } else {
+            playSong(song)
+        }
+    }
+
+    func selectSong(_ song: Song) {
+        selectedSong = song
+        keyPressCount = 0      // 새 곡 선택 시 리셋
+        keyLog = []
+        print("선택됨: \(song.title)")
+    }
+
+    // MARK: - 재생 제어
+
     func playSong(_ song: Song) {
         let player = ApplicationMusicPlayer.shared
+        // 큐에 있는 곡을 무한반복
+        player.state.repeatMode = .all
+        
         player.queue = [song]
         nowPlayingSong = song
         isPlaying = true
-        
+
         Task {
             do {
                 try await player.play()
-                print("재생 시작: \(song.title) - \(song.artistName)")
+                print("재생 시작: \(song.title)")
             } catch {
                 print("재생 실패: \(error.localizedDescription)")
                 isPlaying = false
             }
         }
     }
-    
+
+    /// 이미 로드된 곡 재개 (키보드 모드 재생)
+    func resumeOrPlay(_ song: Song) {
+        if nowPlayingSong?.id == song.id {
+            // 같은 곡이면 일시정지에서 재개
+            Task {
+                do {
+                    try await ApplicationMusicPlayer.shared.play()
+                    isPlaying = true
+                    print("재개: \(song.title)")
+                } catch {
+                    print("재개 실패: \(error.localizedDescription)")
+                }
+            }
+        } else {
+            playSong(song)
+        }
+    }
+
+    func pausePlayback() {
+        ApplicationMusicPlayer.shared.pause()
+        isPlaying = false
+        print("일시정지")
+    }
+
     func stopPlayback() {
         ApplicationMusicPlayer.shared.stop()
         isPlaying = false
         nowPlayingSong = nil
     }
-    
+
+    // MARK: - 키보드 모드 핵심 로직
+
+    /// 키 하나가 눌릴 때마다 호출.
+    /// 홀수 번째 → 재생, 짝수 번째 → 일시정지
+    func handleKeyPress(key: String) {
+        guard isKeyboardModeEnabled, let song = selectedSong else { return }
+
+        keyPressCount += 1
+//        let isPlayAction = (keyPressCount % 2 == 1)
+        let isPlayAction = (keyPressCount % pauseInterval != 0)
+        let entry = KeyLogEntry(key: key, action: isPlayAction ? .play : .pause)
+
+        // 최신 순 삽입, 최대 30개 유지
+        keyLog.insert(entry, at: 0)
+        if keyLog.count > 30 { keyLog = Array(keyLog.prefix(30)) }
+
+        if isPlayAction {
+            resumeOrPlay(song)
+        } else {
+            pausePlayback()
+        }
+    }
+
+    /// 키보드 모드 토글 (OFF → ON 시 상태 초기화)
+    func toggleKeyboardMode() {
+        isKeyboardModeEnabled.toggle()
+        if isKeyboardModeEnabled {
+            keyPressCount = 0
+            keyLog = []
+        } else {
+            // 키보드 모드 끄면 재생도 정지
+            if isPlaying { pausePlayback() }
+        }
+    }
+
     // MARK: - 탭 2: 아트워크 전용 검색
-    
+
     func searchArtwork(keyword: String) async {
         guard isAuthorized else { return }
         do {
@@ -98,75 +215,57 @@ class MusicManager: ObservableObject {
             print("아트워크 검색 실패: \(error.localizedDescription)")
         }
     }
-    
+
     // MARK: - 탭 3: 개인 취향 기반 추천
-    
+
     func fetchRecommendations() async {
         guard isAuthorized else { return }
         do {
             let request = MusicPersonalRecommendationsRequest()
             let response = try await request.response()
             self.recommendations = Array(response.recommendations)
-            print("추천 카테고리 수: \(self.recommendations.count)")
         } catch {
             print("추천 조회 실패: \(error.localizedDescription)")
         }
     }
-    
-    // MARK: - 탭 4: 연간 Replay 조회
-    
-    /// Apple Music Replay 플레이리스트는 사용자 보관함에 저장되어 있습니다.
-    /// "Replay" 키워드로 필터링하여 연도별 Replay 목록을 가져옵니다.
+
+    // MARK: - 탭 4: 연간 Replay
+
     func fetchReplayPlaylists() async {
         guard isAuthorized else { return }
         do {
             var request = MusicLibraryRequest<Playlist>()
             request.limit = 50
             let response = try await request.response()
-            
-            // "Replay" 또는 "리플레이" 가 포함된 플레이리스트 필터링
-            self.replayPlaylists = response.items.filter { playlist in
-                let name = playlist.name.lowercased()
-                return name.contains("replay") || name.contains("리플레이")
+            self.replayPlaylists = response.items.filter {
+                let n = $0.name.lowercased()
+                return n.contains("replay") || n.contains("리플레이")
             }
-            
-            print("Replay 플레이리스트 수: \(self.replayPlaylists.count)")
-            
-            // 없을 경우 카탈로그에서 검색 시도
-            if self.replayPlaylists.isEmpty {
-                await fetchReplayFromCatalog()
-            }
+            if self.replayPlaylists.isEmpty { await fetchReplayFromCatalog() }
         } catch {
-            print("Replay 조회 실패: \(error.localizedDescription)")
             await fetchReplayFromCatalog()
         }
     }
-    
-    /// 보관함에 없을 경우 카탈로그에서 Apple Music Replay 검색
+
     private func fetchReplayFromCatalog() async {
         do {
             var request = MusicCatalogSearchRequest(term: "Apple Music Replay", types: [Playlist.self])
             request.limit = 10
             let response = try await request.response()
             self.replayPlaylists = Array(response.playlists)
-            print("카탈로그 Replay 검색 결과: \(self.replayPlaylists.count)")
         } catch {
             print("카탈로그 Replay 검색 실패: \(error.localizedDescription)")
         }
     }
-    
+
     // MARK: - 구독 확인
-    
+
     func checkSubscription() async {
         do {
-            let subscription = try await MusicSubscription.current
-            if subscription.canPlayCatalogContent {
-                print("Apple Music 구독 중 (카탈로그 재생 가능)")
-            } else {
-                print("구독하지 않음 또는 재생 제한됨")
-            }
+            let sub = try await MusicSubscription.current
+            print(sub.canPlayCatalogContent ? "구독 중" : "구독 안 함")
         } catch {
-            print("구독 정보 조회 실패: \(error.localizedDescription)")
+            print("구독 조회 실패: \(error.localizedDescription)")
         }
     }
 }

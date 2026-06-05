@@ -19,9 +19,22 @@
 		F8B88C862FD1661900BD0BAF /* musickit.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = musickit.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F8C773912FD2B42F0021B8A0 /* Exceptions for "SoundandMusic" folder in "SoundandMusic" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F8641B222FCF205700E98376 /* SoundandMusic */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F8641B252FCF205700E98376 /* SoundandMusic */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F8C773912FD2B42F0021B8A0 /* Exceptions for "SoundandMusic" folder in "SoundandMusic" target */,
+			);
 			path = SoundandMusic;
 			sourceTree = "<group>";
 		};
@@ -293,6 +306,8 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SoundandMusic/Info.plist;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "이 앱은 시스템 이벤트를 모니터링하기 위해 자동화 권한이 필요합니다. 왜냐면 전역키보드탐지하기땜문이죠";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Apple Music 카탈로그 검색 및 음악 재생 기능을 제공하기 위해 음악 보관함 권한이 필요해요이 ^.^";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -300,6 +315,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				NEW_SETTING = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nooy.SoundandMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -337,6 +353,8 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SoundandMusic/Info.plist;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "이 앱은 시스템 이벤트를 모니터링하기 위해 자동화 권한이 필요합니다. 왜냐면 전역키보드탐지하기땜문이죠";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Apple Music 카탈로그 검색 및 음악 재생 기능을 제공하기 위해 음악 보관함 권한이 필요해요이 ^.^";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -344,6 +362,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				NEW_SETTING = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nooy.SoundandMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;

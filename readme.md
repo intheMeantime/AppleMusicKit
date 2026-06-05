@@ -1,13 +1,16 @@
 #  Sound and Music
 
+![musickit](img/musickit.png)
 ## MusicKit ?!
 - **Apple Music 콘텐츠를 검색하고, 메타데이터를 읽고, 재생하고, 사용자의 라이브러리와 상호작용하는 프레임워크**
 -  MusicKit은 Apple Music API를 더 쉽게 사용하기 위한 프레임워크
 - MusicKit에서는 음악 재생이 가능하다 
 - 오디오 신호 자체를 자유롭게 다루는 오디오 처리 프레임워크는 아님!
 
+📄 [MusicKit](note/musickit.md)
 
-### 재밋어보이는 기능 리스트업
+
+__재밋어보이는 기능 리스트업__
 
 <https://developer.apple.com/documentation/musickit/artwork>
 - **아트워크** 
@@ -55,8 +58,48 @@
 ## Preview
 
 ### 음악 재생 뷰
-![preview](img/playView.png)
+![playView](img/playView.png)
+
+- 모든 property를 출력해두었음.
+- var artistName: String
+- var genreNames: [String]
+- var hasLyrics: Bool
+- let id: MusicItemID
+- var title: String
+    - 를 제외하고는 `nil` !
+
+
+- 음악 스트리밍하는 코드
+```swift
+// MARK: - 재생 제어
+
+func playSong(_ song: Song) {
+    let player = ApplicationMusicPlayer.shared
+    player.queue = [song]
+    nowPlayingSong = song
+    isPlaying = true
+
+    Task {
+        do {
+            try await player.play()
+            print("재생 시작: \(song.title)")
+        } catch {
+            print("재생 실패: \(error.localizedDescription)")
+            isPlaying = false
+        }
+    }
+}```
 
 
 ### 아트워크 뷰
-![preview](img/artworkView.png)
+![artworkView](img/artworkView.png)
+- 아트워크 스트럭트의 property 출력
+- 대체텍스트, 이미지 사이즈, 평균 색상, 보조색상 등
+
+
+### 키보드 입력으로 재생/중단하기
+![preview](img/keyboard_play.png)
+- 키보드 모드: 키보드 입력으로 음악 재생과 일시중지를 제어하기
+- 키보드 모드 on/off 가능
+- n번 간격으로 중지하도록 설정 가능 (범위: [2,20))
+- 다른 창으로 넘어와도 계속 키보드 입력 감지 가능하도록 함 `addGlobalMonitorForEvents`
