@@ -7,26 +7,28 @@
 - MusicKit에서는 음악 재생이 가능하다 
 - 오디오 신호 자체를 자유롭게 다루는 오디오 처리 프레임워크는 아님!
 
-📄 [MusicKit](note/musickit.md)
+📄 [MusicKit에 대하여](note/musickit.md)
 
 
 __재밋어보이는 기능 리스트업__
 
-<https://developer.apple.com/documentation/musickit/artwork>
+
 - **아트워크** 
     - let backgroundColor: CGColor? 이미지의 평균 배경색.
     - let primaryTextColor: CGColor? 배경색이 표시될 경우 사용되는 기본 텍스트 색상.
+    - <https://developer.apple.com/documentation/musickit/artwork>
 
 
-<https://developer.apple.com/documentation/applemusicapi/musicsummaries/views-data.dictionary>
 - **musicsummaries**
     - 사용자가 지정된 기간 동안 가장 많이 들었던 앨범, 아티스트 및 노래 목록.
+    - MusicKit은 아니고 Apple Music API 으로 지원
+    - <https://developer.apple.com/documentation/applemusicapi/musicsummaries/views-data.dictionary>
 
 
 ---
 
 ## MusicKit 시작하기 !
-<https://developer.apple.com/documentation/MusicKit/> 
+[Apple Developer](https://developer.apple.com/kr/) 
 
 1. **애플 개발자 계정에서 미디어 Identifiers와 개인 키를 생성**
     - Certificates, Identifiers & Profiles > Identifiers > Media IDs > 새로 생성
@@ -58,15 +60,17 @@ __재밋어보이는 기능 리스트업__
 ## Preview
 
 ### 음악 재생 뷰
+- Song의 모든 property를 출력해두었음.
+
 ![playView](img/playView.png)
 
-- 모든 property를 출력해두었음.
-- var artistName: String
-- var genreNames: [String]
-- var hasLyrics: Bool
-- let id: MusicItemID
-- var title: String
-    - 를 제외하고는 `nil` !
+`var artistName: String`
+`var genreNames: [String]`
+`var hasLyrics: Bool`
+`let id: MusicItemID`
+`var title: String`
+를 제외하고는 `nil` !
+
 
 
 - 음악 스트리밍하는 코드
@@ -88,7 +92,8 @@ func playSong(_ song: Song) {
             isPlaying = false
         }
     }
-}```
+}
+```
 
 
 ### 아트워크 뷰
