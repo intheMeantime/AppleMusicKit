@@ -48,3 +48,15 @@
 
 4. **macOS 앱 - 샌드박스(App Sandbox) 네트워크 설정 허용**
     - Targets > macOS > Signing & Capabilities > App Sandbox > Network: Outgoing Connections (Client)
+
+
+---
+
+## Preview
+
+### 음악 재생 뷰
+![preview](img/playView.png)
+
+
+### 아트워크 뷰
+![preview](img/artworkView.png)

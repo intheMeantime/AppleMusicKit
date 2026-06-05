@@ -346,7 +346,7 @@ struct Tab2ArtworkView: View {
     @State private var keyword = ""
     
     // 3열 그리드
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 4)
     
     var body: some View {
         VStack(spacing: 0) {
