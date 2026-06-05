@@ -28,7 +28,8 @@ __재밋어보이는 기능 리스트업__
 ---
 
 ## MusicKit 시작하기 !
-[Apple Developer](https://developer.apple.com/kr/) 
+[Apple Developer](https://developer.apple.com/kr/)
+[개발자토큰 생성 안내](https://developer.apple.com/documentation/musickit/using-automatic-token-generation-for-apple-music-api)
 
 1. **애플 개발자 계정에서 미디어 Identifiers와 개인 키를 생성**
     - Certificates, Identifiers & Profiles > Identifiers > Media IDs > 새로 생성
@@ -95,7 +96,6 @@ func playSong(_ song: Song) {
 }
 ```
 
-
 ### 아트워크 뷰
 ![artworkView](img/artworkView.png)
 - 아트워크 스트럭트의 property 출력
@@ -106,5 +106,5 @@ func playSong(_ song: Song) {
 ![preview](img/keyboard_play.png)
 - 키보드 모드: 키보드 입력으로 음악 재생과 일시중지를 제어하기
 - 키보드 모드 on/off 가능
-- n번 간격으로 중지하도록 설정 가능 (범위: [2,20))
+- n번 간격으로 중지하도록 설정 가능 (범위: [2,20])
 - 다른 창으로 넘어와도 계속 키보드 입력 감지 가능하도록 함 `addGlobalMonitorForEvents`

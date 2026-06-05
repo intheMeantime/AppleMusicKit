@@ -7,7 +7,7 @@
 | 항목 | MusicKit | Apple Music API |
 | :--- | :--- | :--- |
 | 형태 | Swift Framework | REST API |
-| 사용 환경 | iOS, macOS, tvOS, watchOS | 모든 플랫폼 |
+| 사용 환경 | iOS iPadOS MacCatalyst macOS tvOS visionOS watchOS| 모든 플랫폼 |
 | 언어 | Swift | 언어 무관 |
 | 재생 기능 | O | X |
 | UI 컴포넌트 | O | X |
@@ -16,6 +16,13 @@
 | Android 지원 | X (별도 Android SDK 사용) | O |
 | Web 지원 | X (별도 MusicKit JS 사용) | O |
 
+
+### 사용자의 애플뮤직 구독 확인??
+playSong(_:)에서 ApplicationMusicPlayer.shared로 카탈로그 곡 재생을 시도하고 있고,
+실제로 재생이 된다면
+
+기기/계정이 이미 Apple Music 조건을 충족(구독/미디어 접근 가능)하거나
+테스트 환경/계정 상태에 따라 프레임워크가 재생을 허용하는 케이스 일 수 있음.
 
 
 
