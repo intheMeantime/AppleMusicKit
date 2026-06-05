@@ -345,7 +345,7 @@ struct Tab2ArtworkView: View {
     @ObservedObject var musicManager: MusicManager
     @State private var keyword = ""
     
-    // 2열 그리드
+    // 3열 그리드
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
     
     var body: some View {
@@ -402,18 +402,66 @@ struct ArtworkCellView: View {
         ZStack(alignment: .bottom) {
             // 아트워크 있으면 띄우기
             if let artwork = song.artwork {
-                ArtworkImage(artwork, width: .infinity, height: 300)
-                    .aspectRatio(1, contentMode: .fill)
-                    .clipped()
-                    .cornerRadius(8)
-            } else {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.secondary.opacity(0.15))
-                    .aspectRatio(1, contentMode: .fit)
-                    .overlay(
-                        Image(systemName: "music.note")
+                VStack(spacing: 8) {
+                    ArtworkImage(artwork, width: .infinity, height: 300)
+                        .aspectRatio(1, contentMode: .fill)
+                        .clipped()
+                        .cornerRadius(8)
+                    
+                    // ================= [아트워크 프로퍼티 출력 부분] =================
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("--- Artwork Properties ---")
+                            .font(.caption).bold()
                             .foregroundColor(.secondary)
-                    )
+                        
+                        Text("가로 크기(width): \(artwork.maximumWidth)px")
+                        Text("세로 크기(height): \(artwork.maximumHeight)px")
+                        
+                    
+                        // 배경색 (CGColor 또는 정형화된 형태, 옵셔널 처리)
+                        // The average background color of the image.
+                        Text("배경색(backgroundColor): \(artwork.backgroundColor != nil ? "\(artwork.backgroundColor!)" : "-")")
+                            .background(
+                                artwork.backgroundColor.map { Color(cgColor: $0) } ?? .clear
+                            )
+                        
+                        // 텍스트 색상들 (옵셔널 처리)
+                        Text("기본 텍스트 색상(primaryTextColor): \(artwork.primaryTextColor != nil ? "\(artwork.primaryTextColor!)" : "-")")
+                            .background(
+                                artwork.primaryTextColor.map { Color(cgColor: $0) } ?? .clear
+                            )
+                        Text("배경 보조 텍스트 색상(quaternaryTextColor): \(artwork.quaternaryTextColor != nil ? "\(artwork.quaternaryTextColor!)" : "-")")
+                            .background(
+                                artwork.quaternaryTextColor.map { Color(cgColor: $0) } ?? .clear
+                            )
+                        Text("삼차 텍스트 색상(secondaryTextColor): \(artwork.secondaryTextColor != nil ? "\(artwork.secondaryTextColor!)" : "-")")
+                            .background(
+                                artwork.secondaryTextColor.map { Color(cgColor: $0) } ?? .clear
+                            )
+                        Text("사차 텍스트 색상(tertiaryTextColor): \(artwork.tertiaryTextColor != nil ? "\(artwork.tertiaryTextColor!)" : "-")")
+                            .background(
+                                artwork.tertiaryTextColor.map { Color(cgColor: $0) } ?? .clear
+                            )
+                    }
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 4)
+                }
+            } else {
+                VStack(spacing: 8) {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.secondary.opacity(0.15))
+                        .aspectRatio(1, contentMode: .fit)
+                        .overlay(
+                            Image(systemName: "music.note")
+                                .foregroundColor(.secondary)
+                        )
+                    
+                    Text("아트워크 정보가 없습니다.")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
             }
             
             // 호버 시 곡 정보 오버레이
@@ -432,10 +480,11 @@ struct ArtworkCellView: View {
                 .padding(6)
                 .background(
                     LinearGradient(
-                        colors: [.clear, .black.opacity(0.75)],
+                        colors: [.clear, .black.opacity(1.0)],
                         startPoint: .top, endPoint: .bottom
                     )
                 )
+                // ⚠️ .cornerRadius(8, corners: [...]) 커스텀 Extension을 사용하는 형태에 맞게 유지
                 .cornerRadius(8, corners: [.bottomLeft, .bottomRight])
             }
         }
